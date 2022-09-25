@@ -1,5 +1,6 @@
 import os
 from datetime import timedelta
+from datetime import datetime
 from importlib import import_module
 
 import qrcode
@@ -376,14 +377,34 @@ class SessionManagementAPI(APIView):
 class UserRankAPI(APIView):
     def get(self, request):
         rule_type = request.GET.get("rule")
+        since = request.GET.get("since")
+        to = request.GET.get("to")
+
         if rule_type not in ContestRuleType.choices():
             rule_type = ContestRuleType.ACM
+
+        if since:
+            if not since.isnumeric():
+                return self.error("since must be a number")
+
+        if to:
+            if not to.isnumeric():
+                return self.error("to must be a number")
+
         profiles = UserProfile.objects.filter(user__admin_type=AdminType.REGULAR_USER, user__is_disabled=False) \
             .select_related("user")
+
         if rule_type == ContestRuleType.ACM:
             profiles = profiles.filter(submission_number__gt=0).order_by("-accepted_number", "submission_number")
         else:
             profiles = profiles.filter(total_score__gt=0).order_by("-total_score")
+
+        if since:
+            profiles = profiles.filter(user__create_time__gte=datetime.fromtimestamp(int(since)))
+
+        if to:
+            profiles = profiles.filter(user__create_time__lte=datetime.fromtimestamp(int(to)))
+
         return self.success(self.paginate_data(request, profiles, RankInfoSerializer))
 
 
@@ -433,4 +454,5 @@ class SSOAPI(CSRFExemptAPIView):
             user = User.objects.get(auth_token=request.data["token"])
         except User.DoesNotExist:
             return self.error("User does not exist")
-        return self.success({"username": user.username, "avatar": user.userprofile.avatar, "admin_type": user.admin_type})
+        return self.success(
+            {"username": user.username, "avatar": user.userprofile.avatar, "admin_type": user.admin_type})

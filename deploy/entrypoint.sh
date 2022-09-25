@@ -46,18 +46,29 @@ if [ -z "$MAX_WORKER_NUM" ]; then
     fi
 fi
 
+echo "Applying CDN configurations..."
+
 cd $APP/dist
 if [ ! -z "$STATIC_CDN_HOST" ]; then
-    find . -name "*.*" -type f -exec sed -i "s/__STATIC_CDN_HOST__/\/$STATIC_CDN_HOST/g" {} \;
+    echo "Using CDN host ${STATIC_CDN_HOST}"
+    find . -name "*.css" -type f -exec sed -i "s/__STATIC_CDN_HOST__/\/$STATIC_CDN_HOST/g" {} \;
+    find . -name "*.js" -type f -exec sed -i "s/__STATIC_CDN_HOST__/\/$STATIC_CDN_HOST/g" {} \;
+    find . -name "*.html" -type f -exec sed -i "s/__STATIC_CDN_HOST__/\/$STATIC_CDN_HOST/g" {} \;
 else
-    find . -name "*.*" -type f -exec sed -i "s/__STATIC_CDN_HOST__\///g" {} \;
+    echo "Not using CDN host"
+    find . -name "*.css" -type f -exec sed -i "s/__STATIC_CDN_HOST__\///g" {} \;
+    find . -name "*.js" -type f -exec sed -i "s/__STATIC_CDN_HOST__\///g" {} \;
+    find . -name "*.html" -type f -exec sed -i "s/__STATIC_CDN_HOST__\///g" {} \;
 fi
+
+echo "Server initialization"
 
 cd $APP
 
 n=0
 while [ $n -lt 5 ]
 do
+    python manage.py makemigrations &&
     python manage.py migrate --no-input &&
     python manage.py inituser --username=root --password=rootroot --action=create_super_admin &&
     echo "from options.options import SysOptions; SysOptions.judge_server_token='$JUDGE_SERVER_TOKEN'" | python manage.py shell &&
@@ -68,10 +79,16 @@ do
     sleep 8
 done
 
+echo "Adding app user"
+
 addgroup -g 12003 spj
 adduser -u 12000 -S -G spj server
+
+echo "starting server..."
 
 chown -R server:spj $DATA $APP/dist
 find $DATA/test_case -type d -exec chmod 710 {} \;
 find $DATA/test_case -type f -exec chmod 640 {} \;
 exec supervisord -c /app/deploy/supervisord.conf
+
+echo "server started"

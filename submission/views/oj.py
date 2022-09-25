@@ -14,6 +14,7 @@ from ..models import Submission
 from ..serializers import (CreateSubmissionSerializer, SubmissionModelSerializer,
                            ShareSubmissionSerializer)
 from ..serializers import SubmissionSafeModelSerializer, SubmissionListSerializer
+from datetime import datetime
 
 
 class SubmissionAPI(APIView):
@@ -137,6 +138,15 @@ class SubmissionListAPI(APIView):
         myself = request.GET.get("myself")
         result = request.GET.get("result")
         username = request.GET.get("username")
+        since = request.GET.get("since")
+        to = request.GET.get("to")
+        if since:
+            if not since.isnumeric():
+                return self.error("since must be a number")
+        if to:
+            if not to.isnumeric():
+                return self.error("to must be a number")
+
         if problem_id:
             try:
                 problem = Problem.objects.get(_id=problem_id, contest_id__isnull=True, visible=True)
@@ -149,6 +159,10 @@ class SubmissionListAPI(APIView):
             submissions = submissions.filter(username__icontains=username)
         if result:
             submissions = submissions.filter(result=result)
+        if since:
+            submissions = submissions.filter(create_time__gte=datetime.fromtimestamp(int(since)))
+        if to:
+            submissions = submissions.filter(create_time__lte=datetime.fromtimestamp(int(to)))
         data = self.paginate_data(request, submissions)
         data["results"] = SubmissionListSerializer(data["results"], many=True, user=request.user).data
         return self.success(data)
@@ -166,13 +180,21 @@ class ContestSubmissionListAPI(APIView):
         myself = request.GET.get("myself")
         result = request.GET.get("result")
         username = request.GET.get("username")
+        since = request.GET.get("since")
+        to = request.GET.get("to")
+
         if problem_id:
             try:
                 problem = Problem.objects.get(_id=problem_id, contest_id=contest.id, visible=True)
             except Problem.DoesNotExist:
                 return self.error("Problem doesn't exist")
             submissions = submissions.filter(problem=problem)
-
+        if since:
+            if not since.isnumeric():
+                return self.error("since must be a number")
+        if to:
+            if not to.isnumeric():
+                return self.error("to must be a number")
         if myself and myself == "1":
             submissions = submissions.filter(user_id=request.user.id)
         elif username:
@@ -189,6 +211,10 @@ class ContestSubmissionListAPI(APIView):
             if not contest.real_time_rank and not request.user.is_contest_admin(contest):
                 submissions = submissions.filter(user_id=request.user.id)
 
+        if since:
+            submissions = submissions.filter(create_time__gte=datetime.fromtimestamp(int(since)))
+        if to:
+            submissions = submissions.filter(create_time__lte=datetime.fromtimestamp(int(to)))
         data = self.paginate_data(request, submissions)
         data["results"] = SubmissionListSerializer(data["results"], many=True, user=request.user).data
         return self.success(data)
