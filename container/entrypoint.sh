@@ -1,4 +1,5 @@
 #!/bin/sh
+set -ex
 
 APP=/app
 DATA=/data
@@ -17,34 +18,23 @@ if [ ! -f "$DATA/public/website/favicon.ico" ]; then
     cp data/public/website/favicon.ico $DATA/public/website
 fi
 
-if [ -z "$MAX_WORKER_NUM" ]; then
-    export CPU_CORE_NUM=$(grep -c ^processor /proc/cpuinfo)
-    if [[ $CPU_CORE_NUM -lt 2 ]]; then
-        export MAX_WORKER_NUM=2
-    else
-        export MAX_WORKER_NUM=$(($CPU_CORE_NUM))
-    fi
-fi
+python manage.py migrate --no-input
+python manage.py inituser --username=root --password=rootroot --action=create_super_admin
+echo "from options.options import SysOptions; SysOptions.judge_server_token='$JUDGE_SERVER_TOKEN'" | python manage.py shell
+echo "from conf.models import JudgeServer; JudgeServer.objects.update(task_number=0)" | python manage.py shell
 
-cd $APP
+addgroup -g 903 spj
+adduser -u 900 -S -s /sbin/nologin -H -G spj server
 
-n=0
-while [ $n -lt 5 ]
-do
-    python manage.py migrate --no-input &&
-    python manage.py inituser --username=root --password=rootroot --action=create_super_admin &&
-    echo "from options.options import SysOptions; SysOptions.judge_server_token='$JUDGE_SERVER_TOKEN'" | python manage.py shell &&
-    echo "from conf.models import JudgeServer; JudgeServer.objects.update(task_number=0)" | python manage.py shell &&
-    break
-    n=$(($n+1))
-    echo "Failed to migrate, going to retry..."
-    sleep 8
-done
-
-addgroup -g 12003 spj
-adduser -u 12000 -S -G spj server
-
-chown -R server:spj $DATA $APP/dist
+chown -R server:spj $DATA
 find $DATA/test_case -type d -exec chmod 710 {} \;
 find $DATA/test_case -type f -exec chmod 640 {} \;
-exec supervisord -c /app/container/supervisord.conf
+
+CPU_CORE_NUM="$(nproc)"
+if [ "$CPU_CORE_NUM" -lt 2 ]; then
+    export WORKER_NUM=2;
+else
+    export WORKER_NUM="$CPU_CORE_NUM";
+fi
+
+gunicorn oj.wsgi --user server --group spj --bind 0.0.0.0:8080 --workers $WORKER_NUM

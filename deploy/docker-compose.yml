@@ -10,6 +10,9 @@ services:
   oj-postgres:
     image: postgres:10-alpine
     restart: always
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "onlinejudge" ]
+      start_period: 1m
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
     environment:
@@ -21,6 +24,9 @@ services:
     image: ghcr.io/qingdaou/oj-judge:1.6.0
     # image: oj-judge
     restart: always
+    depends_on:
+      oj-backend:
+        condition: service_started
     read_only: true
     cap_drop:
       - SETPCAP
@@ -46,9 +52,28 @@ services:
     # image: oj-backend
     restart: always
     depends_on:
-      - oj-redis
-      - oj-postgres
-      - oj-judge
+      oj-redis:
+        condition: service_started
+      oj-postgres:
+        condition: service_healthy
+    volumes:
+      - ./data/backend:/data
+    environment:
+      - POSTGRES_DB=onlinejudge
+      - POSTGRES_USER=onlinejudge
+      - POSTGRES_PASSWORD=onlinejudge
+      - JUDGE_SERVER_TOKEN=CHANGE_THIS
+
+  oj-dramatiq:
+    image: ghcr.io/qingdaou/oj-backend:1.7.0
+    # image: oj-backend
+    restart: always
+    depends_on:
+      oj-redis:
+        condition: service_started
+      oj-postgres:
+        condition: service_healthy
+    command: [ "python3", "manage.py", "rundramatiq" ]
     volumes:
       - ./data/backend:/data
     environment:

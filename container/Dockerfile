@@ -18,6 +18,5 @@ EOS
 COPY ./ /app/
 RUN chmod -R u=rwX,go=rX ./ && chmod +x /app/container/entrypoint.sh
 
-HEALTHCHECK --interval=5s CMD [ "/usr/local/bin/python3", "/app/container/health_check.py" ]
 EXPOSE 8080
-ENTRYPOINT [ "/app/container/entrypoint.sh" ]
+CMD [ "/app/container/entrypoint.sh" ]
