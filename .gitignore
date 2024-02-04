@@ -60,22 +60,4 @@ tmp/
 custom_settings.py
 *.zip
 
-data/log/*
-!data/log/.gitkeep
-data/test_case/*
-!data/test_case/.gitkeep
-data/ssl/*
-!data/ssl/.gitkeep
-data/public/upload/*
-!data/public/upload/.gitkeep
-data/public/avatar/*
-!data/public/avatar/default.png
-data/config/*
-!data/config/.gitkeep
-
-http_locations.conf
-https_locations.conf
-
 venv/
-#test docker-compose
-docker-compose.yml

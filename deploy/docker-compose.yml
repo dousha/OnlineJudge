@@ -1,0 +1,70 @@
+version: "3"
+services:
+
+  oj-redis:
+    image: redis:4.0-alpine
+    restart: always
+    volumes:
+      - ./data/redis:/data
+  
+  oj-postgres:
+    image: postgres:10-alpine
+    restart: always
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=onlinejudge
+      - POSTGRES_USER=onlinejudge
+      - POSTGRES_PASSWORD=onlinejudge
+
+  oj-judge:
+    image: ghcr.io/qingdaou/oj-judge:1.6.0
+    # image: oj-judge
+    restart: always
+    read_only: true
+    cap_drop:
+      - SETPCAP
+      - MKNOD
+      - NET_BIND_SERVICE
+      - SYS_CHROOT
+      - SETFCAP
+      - FSETID
+    tmpfs:
+      - /tmp
+    volumes:
+      - ./data/backend/test_case:/test_case:ro
+      - ./data/judge_server/log:/log
+      - ./data/judge_server/run:/judger
+    environment:
+      - SERVICE_URL=http://oj-judge:8080
+      - BACKEND_URL=http://oj-backend:8080/api/judge_server_heartbeat/
+      - TOKEN=CHANGE_THIS
+      # - judger_debug=1
+  
+  oj-backend:
+    image: ghcr.io/qingdaou/oj-backend:1.7.0
+    # image: oj-backend
+    restart: always
+    depends_on:
+      - oj-redis
+      - oj-postgres
+      - oj-judge
+    volumes:
+      - ./data/backend:/data
+    environment:
+      - POSTGRES_DB=onlinejudge
+      - POSTGRES_USER=onlinejudge
+      - POSTGRES_PASSWORD=onlinejudge
+      - JUDGE_SERVER_TOKEN=CHANGE_THIS
+
+  oj-frontend:
+    image: ghcr.io/qingdaou/oj-frontend:1.7.0
+    # image: oj-frontend
+    restart: always
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./data/caddy:/data
+    ports:
+      - 80:8080
+      - 443:8443
+      - 443:8443/udp

@@ -1,0 +1,20 @@
+{
+	http_port 8080
+	https_port 8443
+}
+
+localhost {
+	root * /app
+
+	route /api/* {
+		reverse_proxy oj-backend:8080
+	}
+	route /admin/* {
+		try_files {path} {path}/ /admin/index.html
+		file_server
+	}
+	route {
+		try_files {path} {path}/ /index.html
+		file_server
+	}
+}
