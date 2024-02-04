@@ -2,13 +2,13 @@ version: "3"
 services:
 
   oj-redis:
-    image: redis:4.0-alpine
+    image: redis:7-alpine
     restart: always
     volumes:
       - ./data/redis:/data
   
   oj-postgres:
-    image: postgres:10-alpine
+    image: postgres:16-alpine
     restart: always
     healthcheck:
       test: [ "CMD", "pg_isready", "-U", "onlinejudge" ]
