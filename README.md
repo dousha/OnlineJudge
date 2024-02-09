@@ -1,11 +1,10 @@
 # OnlineJudge 2.0
 
-[![Python](https://img.shields.io/badge/python-3.8.0-blue.svg?style=flat-square)](https://www.python.org/downloads/release/python-362/)
-[![Django](https://img.shields.io/badge/django-3.2.9-blue.svg?style=flat-square)](https://www.djangoproject.com/)
-[![Django Rest Framework](https://img.shields.io/badge/django_rest_framework-3.12.0-blue.svg?style=flat-square)](http://www.django-rest-framework.org/)
-[![Build Status](https://travis-ci.org/QingdaoU/OnlineJudge.svg?branch=master)](https://travis-ci.org/QingdaoU/OnlineJudge)
+[![Python](https://img.shields.io/badge/Python-3.8-blue.svg?style=flat-square)](https://www.python.org/)
+[![Django](https://img.shields.io/badge/Django-3.2-blue.svg?style=flat-square)](https://www.djangoproject.com/)
+[![Django Rest Framework](https://img.shields.io/badge/Django_Rest_Framework-3.14-blue.svg?style=flat-square)](http://www.django-rest-framework.org/)
 
-> #### An onlinejudge system based on Python and Vue. [Demo](https://qduoj.com)
+> An online judge system based on Python and Vue.
 
 [中文文档](README-CN.md)
 
@@ -17,28 +16,32 @@
 + Amazing charting and visualization
 + Template-problem support
 + More reasonable permission control
-+ Multi-language support: `C`, `C++`, `Java`, `Python2`, `Python3`
++ Multi-language support: C, C++, Java, Python3, Golang, Node.js
 + Markdown & MathJax support
 + Contest participants IP limit(CIDR)
 
 Main modules are available below:
 
-+ Backend(Django): [https://github.com/QingdaoU/OnlineJudge](https://github.com/QingdaoU/OnlineJudge)
-+ Frontend(Vue): [https://github.com/QingdaoU/OnlineJudgeFE](https://github.com/QingdaoU/OnlineJudgeFE)
-+ Judger Sandbox(Seccomp): [https://github.com/QingdaoU/Judger](https://github.com/QingdaoU/Judger)
-+ JudgeServer(A wrapper for Judger): [https://github.com/QingdaoU/JudgeServer](https://github.com/QingdaoU/JudgeServer)
++ Backend(Django): <https://github.com/QingdaoU/OnlineJudge>
++ Frontend(Vue): <https://github.com/QingdaoU/OnlineJudgeFE>
++ Judger Sandbox(Seccomp): <https://github.com/QingdaoU/Judger>
++ JudgeServer(A wrapper for Judger): <https://github.com/QingdaoU/JudgeServer>
+
+## Demo
+
+<https://qduoj.com>
 
 ## Installation
 
-Follow me:  [https://github.com/QingdaoU/OnlineJudgeDeploy/tree/2.0](https://github.com/QingdaoU/OnlineJudgeDeploy/tree/2.0)
+<https://github.com/QingdaoU/OnlineJudgeDeploy>
 
 ## Documents
 
-[http://opensource.qduoj.com/](http://opensource.qduoj.com/)
+<http://opensource.qduoj.com/>
 
 ## Screenshots
 
-### Frontend:
+### Frontend
 
 ![problem-list](https://user-images.githubusercontent.com/20637881/33372506-402022e4-d539-11e7-8e64-6656f8ceb75a.png)
 
@@ -60,7 +63,7 @@ You can control the menu and chart status in rankings.
 
 ![user-home](https://user-images.githubusercontent.com/20637881/33365521-7842d808-d523-11e7-84c1-2e2aa0079f32.png)
 
-### Admin: 
+### Admin
 
 ![admin-users](https://user-images.githubusercontent.com/20637881/33372516-42c34fda-d539-11e7-9f4e-5109477f83be.png)
 
