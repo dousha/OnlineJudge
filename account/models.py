@@ -5,22 +5,22 @@ from utils.models import JSONField
 
 
 class AdminType(object):
-    REGULAR_USER = "Regular User"
-    ADMIN = "Admin"
-    SUPER_ADMIN = "Super Admin"
+    REGULAR_USER = 'Regular User'
+    ADMIN = 'Admin'
+    SUPER_ADMIN = 'Super Admin'
 
 
 class ProblemPermission(object):
-    NONE = "None"
-    OWN = "Own"
-    ALL = "All"
+    NONE = 'None'
+    OWN = 'Own'
+    ALL = 'All'
 
 
 class UserManager(models.Manager):
     use_in_migrations = True
 
     def get_by_natural_key(self, username):
-        return self.get(**{f"{self.model.USERNAME_FIELD}__iexact": username})
+        return self.get(**{f'{self.model.USERNAME_FIELD}__iexact': username})
 
 
 class User(AbstractBaseUser):
@@ -42,7 +42,7 @@ class User(AbstractBaseUser):
     open_api_appkey = models.TextField(null=True)
     is_disabled = models.BooleanField(default=False)
 
-    USERNAME_FIELD = "username"
+    USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
 
     objects = UserManager()
@@ -60,10 +60,12 @@ class User(AbstractBaseUser):
         return self.problem_permission == ProblemPermission.ALL
 
     def is_contest_admin(self, contest):
-        return self.is_authenticated and (contest.created_by == self or self.admin_type == AdminType.SUPER_ADMIN)
+        return self.is_authenticated and (
+            contest.created_by == self or self.admin_type == AdminType.SUPER_ADMIN
+        )
 
     class Meta:
-        db_table = "user"
+        db_table = 'user'
 
 
 class UserProfile(models.Model):
@@ -88,7 +90,7 @@ class UserProfile(models.Model):
     oi_problems_status = JSONField(default=dict)
 
     real_name = models.TextField(null=True)
-    avatar = models.TextField(default=f"{settings.AVATAR_URI_PREFIX}/default.png")
+    avatar = models.TextField(default=f'{settings.AVATAR_URI_PREFIX}/default.png')
     blog = models.URLField(null=True)
     mood = models.TextField(null=True)
     github = models.TextField(null=True)
@@ -102,18 +104,18 @@ class UserProfile(models.Model):
     submission_number = models.IntegerField(default=0)
 
     def add_accepted_problem_number(self):
-        self.accepted_number = models.F("accepted_number") + 1
+        self.accepted_number = models.F('accepted_number') + 1
         self.save()
 
     def add_submission_number(self):
-        self.submission_number = models.F("submission_number") + 1
+        self.submission_number = models.F('submission_number') + 1
         self.save()
 
     # 计算总分时， 应先减掉上次该题所得分数， 然后再加上本次所得分数
     def add_score(self, this_time_score, last_time_score=None):
         last_time_score = last_time_score or 0
-        self.total_score = models.F("total_score") - last_time_score + this_time_score
+        self.total_score = models.F('total_score') - last_time_score + this_time_score
         self.save()
 
     class Meta:
-        db_table = "user_profile"
+        db_table = 'user_profile'

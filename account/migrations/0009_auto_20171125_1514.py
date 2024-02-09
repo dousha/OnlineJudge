@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('account', '0008_auto_20171011_1214'),
     ]
@@ -15,6 +14,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='userprofile',
             name='avatar',
-            field=models.CharField(default='/public/avatar/default.png', max_length=256),
+            field=models.CharField(
+                default='/public/avatar/default.png', max_length=256
+            ),
         ),
     ]

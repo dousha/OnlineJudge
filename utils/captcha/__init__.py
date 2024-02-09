@@ -24,8 +24,8 @@ class Captcha(object):
         初始化,设置各种属性
         """
         self.django_request = request
-        self.session_key = "_django_captcha_key"
-        self.captcha_expires_time = "_django_captcha_expires_time"
+        self.session_key = '_django_captcha_key'
+        self.captcha_expires_time = '_django_captcha_expires_time'
 
         # 验证码图片尺寸
         self.img_width = 90
@@ -50,20 +50,33 @@ class Captcha(object):
         """
         生成随机数或随机字符串
         """
-        string = random.sample("abcdefghkmnpqrstuvwxyzABCDEFGHGKMNOPQRSTUVWXYZ23456789", 4)
-        self._set_answer("".join(string))
+        string = random.sample(
+            'abcdefghkmnpqrstuvwxyzABCDEFGHGKMNOPQRSTUVWXYZ23456789', 4
+        )
+        self._set_answer(''.join(string))
         return string
 
     def get(self):
         """
         生成验证码图片,返回值为图片的bytes
         """
-        background = (random.randrange(200, 255), random.randrange(200, 255), random.randrange(200, 255))
-        code_color = (random.randrange(0, 50), random.randrange(0, 50), random.randrange(0, 50), 255)
+        background = (
+            random.randrange(200, 255),
+            random.randrange(200, 255),
+            random.randrange(200, 255),
+        )
+        code_color = (
+            random.randrange(0, 50),
+            random.randrange(0, 50),
+            random.randrange(0, 50),
+            255,
+        )
 
-        font_path = os.path.join(os.path.normpath(os.path.dirname(__file__)), "timesbi.ttf")
+        font_path = os.path.join(
+            os.path.normpath(os.path.dirname(__file__)), 'timesbi.ttf'
+        )
 
-        image = Image.new("RGB", (self.img_width, self.img_height), background)
+        image = Image.new('RGB', (self.img_width, self.img_height), background)
         code = self._make_code()
         font_size = self._get_font_size(code)
         draw = ImageDraw.Draw(image)
@@ -75,19 +88,21 @@ class Captcha(object):
             # 字符y坐标
             y = random.randrange(1, 7)
             # 随机字符大小
-            font = ImageFont.truetype(font_path.replace("\\", "/"), font_size + random.randrange(-3, 7))
+            font = ImageFont.truetype(
+                font_path.replace('\\', '/'), font_size + random.randrange(-3, 7)
+            )
             draw.text((x, y), i, font=font, fill=code_color)
             # 随机化字符之间的距离 字符粘连可以降低识别率
             x += font_size * random.randrange(6, 8) / 10
 
-        self.django_request.session[self.session_key] = "".join(code)
+        self.django_request.session[self.session_key] = ''.join(code)
         return image
 
     def check(self, code):
         """
         检查用户输入的验证码是否正确
         """
-        _code = self.django_request.session.get(self.session_key) or ""
+        _code = self.django_request.session.get(self.session_key) or ''
         if not _code:
             return False
         expires_time = self.django_request.session.get(self.captcha_expires_time) or 0

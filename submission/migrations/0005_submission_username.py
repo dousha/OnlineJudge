@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('submission', '0002_auto_20170509_1203'),
     ]
@@ -15,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='submission',
             name='username',
-            field=models.CharField(default="", max_length=30),
+            field=models.CharField(default='', max_length=30),
             preserve_default=False,
         ),
     ]

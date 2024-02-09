@@ -8,7 +8,6 @@ import utils.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('problem', '0011_fix_problem_ac_count'),
     ]
@@ -22,7 +21,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='problem',
             name='contest',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='contest.Contest'),
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to='contest.Contest',
+            ),
         ),
         migrations.AlterField(
             model_name='problem',

@@ -8,7 +8,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('submission', '0006_auto_20170830_1154'),
     ]
@@ -17,12 +16,18 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='submission',
             name='contest_id',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='contest.Contest'),
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to='contest.Contest',
+            ),
         ),
         migrations.AlterField(
             model_name='submission',
             name='problem_id',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='problem.Problem'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to='problem.Problem'
+            ),
         ),
         migrations.RenameField(
             model_name='submission',

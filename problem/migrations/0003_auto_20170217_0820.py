@@ -10,7 +10,6 @@ import utils.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('contest', '0003_auto_20170217_0820'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
@@ -21,7 +20,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ContestProblem',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('title', models.CharField(max_length=128)),
                 ('description', utils.models.RichTextField()),
                 ('input_description', utils.models.RichTextField()),
@@ -37,7 +44,10 @@ class Migration(migrations.Migration):
                 ('time_limit', models.IntegerField()),
                 ('memory_limit', models.IntegerField()),
                 ('spj', models.BooleanField(default=False)),
-                ('spj_language', models.CharField(blank=True, max_length=32, null=True)),
+                (
+                    'spj_language',
+                    models.CharField(blank=True, max_length=32, null=True),
+                ),
                 ('spj_code', models.TextField(blank=True, null=True)),
                 ('spj_version', models.CharField(blank=True, max_length=32, null=True)),
                 ('rule_type', models.CharField(max_length=32)),
@@ -48,8 +58,20 @@ class Migration(migrations.Migration):
                 ('total_accepted_number', models.IntegerField(default=0)),
                 ('_id', models.CharField(db_index=True, max_length=24)),
                 ('is_public', models.BooleanField(default=False)),
-                ('contest', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contest.Contest')),
-                ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    'contest',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='contest.Contest',
+                    ),
+                ),
+                (
+                    'created_by',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
                 ('tags', models.ManyToManyField(to='problem.ProblemTag')),
             ],
             options={

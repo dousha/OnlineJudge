@@ -7,7 +7,6 @@ import jsonfield.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('problem', '0004_auto_20170501_0637'),
     ]

@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('submission', '0001_initial'),
     ]
@@ -34,5 +33,5 @@ class Migration(migrations.Migration):
         migrations.AlterModelOptions(
             name='submission',
             options={'ordering': ('-create_time',)},
-        )
+        ),
     ]

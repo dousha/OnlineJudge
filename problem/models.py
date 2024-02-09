@@ -11,27 +11,31 @@ class ProblemTag(models.Model):
     name = models.TextField()
 
     class Meta:
-        db_table = "problem_tag"
+        db_table = 'problem_tag'
 
 
 class ProblemRuleType(Choices):
-    ACM = "ACM"
-    OI = "OI"
+    ACM = 'ACM'
+    OI = 'OI'
 
 
 class ProblemDifficulty(object):
-    High = "High"
-    Mid = "Mid"
-    Low = "Low"
+    High = 'High'
+    Mid = 'Mid'
+    Low = 'Low'
 
 
 class ProblemIOMode(Choices):
-    standard = "Standard IO"
-    file = "File IO"
+    standard = 'Standard IO'
+    file = 'File IO'
 
 
 def _default_io_mode():
-    return {"io_mode": ProblemIOMode.standard, "input": "input.txt", "output": "output.txt"}
+    return {
+        'io_mode': ProblemIOMode.standard,
+        'input': 'input.txt',
+        'output': 'output.txt',
+    }
 
 
 class Problem(models.Model):
@@ -83,14 +87,14 @@ class Problem(models.Model):
     share_submission = models.BooleanField(default=False)
 
     class Meta:
-        db_table = "problem"
-        unique_together = (("_id", "contest"),)
-        ordering = ("create_time",)
+        db_table = 'problem'
+        unique_together = (('_id', 'contest'),)
+        ordering = ('create_time',)
 
     def add_submission_number(self):
-        self.submission_number = models.F("submission_number") + 1
-        self.save(update_fields=["submission_number"])
+        self.submission_number = models.F('submission_number') + 1
+        self.save(update_fields=['submission_number'])
 
     def add_ac_number(self):
-        self.accepted_number = models.F("accepted_number") + 1
-        self.save(update_fields=["accepted_number"])
+        self.accepted_number = models.F('accepted_number') + 1
+        self.save(update_fields=['accepted_number'])

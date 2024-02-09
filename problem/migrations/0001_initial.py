@@ -10,7 +10,6 @@ import utils.models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -21,7 +20,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Problem',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('title', models.CharField(max_length=128)),
                 ('description', utils.models.RichTextField()),
                 ('input_description', utils.models.RichTextField()),
@@ -37,7 +44,10 @@ class Migration(migrations.Migration):
                 ('time_limit', models.IntegerField()),
                 ('memory_limit', models.IntegerField()),
                 ('spj', models.BooleanField(default=False)),
-                ('spj_language', models.CharField(blank=True, max_length=32, null=True)),
+                (
+                    'spj_language',
+                    models.CharField(blank=True, max_length=32, null=True),
+                ),
                 ('spj_code', models.TextField(blank=True, null=True)),
                 ('spj_version', models.CharField(blank=True, max_length=32, null=True)),
                 ('rule_type', models.CharField(max_length=32)),
@@ -46,7 +56,13 @@ class Migration(migrations.Migration):
                 ('source', models.CharField(blank=True, max_length=200, null=True)),
                 ('total_submit_number', models.IntegerField(default=0)),
                 ('total_accepted_number', models.IntegerField(default=0)),
-                ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    'created_by',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
                 'db_table': 'problem',
@@ -56,7 +72,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProblemTag',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('name', models.CharField(max_length=30)),
             ],
             options={

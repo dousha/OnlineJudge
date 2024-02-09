@@ -7,4 +7,6 @@ from announcement.serializers import AnnouncementSerializer
 class AnnouncementAPI(APIView):
     def get(self, request):
         announcements = Announcement.objects.filter(visible=True)
-        return self.success(self.paginate_data(request, announcements, AnnouncementSerializer))
+        return self.success(
+            self.paginate_data(request, announcements, AnnouncementSerializer)
+        )

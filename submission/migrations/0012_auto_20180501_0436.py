@@ -7,7 +7,6 @@ import utils.shortcuts
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('submission', '0011_fix_submission_number'),
     ]
@@ -16,7 +15,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='submission',
             name='id',
-            field=models.TextField(db_index=True, default=utils.shortcuts.rand_str, primary_key=True, serialize=False),
+            field=models.TextField(
+                db_index=True,
+                default=utils.shortcuts.rand_str,
+                primary_key=True,
+                serialize=False,
+            ),
         ),
         migrations.AlterField(
             model_name='submission',

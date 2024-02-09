@@ -9,11 +9,15 @@ class CreateConetestSeriaizer(serializers.Serializer):
     description = serializers.CharField()
     start_time = serializers.DateTimeField()
     end_time = serializers.DateTimeField()
-    rule_type = serializers.ChoiceField(choices=[ContestRuleType.ACM, ContestRuleType.OI])
+    rule_type = serializers.ChoiceField(
+        choices=[ContestRuleType.ACM, ContestRuleType.OI]
+    )
     password = serializers.CharField(allow_blank=True, max_length=32)
     visible = serializers.BooleanField()
     real_time_rank = serializers.BooleanField()
-    allowed_ip_ranges = serializers.ListField(child=serializers.CharField(max_length=32), allow_empty=True)
+    allowed_ip_ranges = serializers.ListField(
+        child=serializers.CharField(max_length=32), allow_empty=True
+    )
 
 
 class EditConetestSeriaizer(serializers.Serializer):
@@ -25,7 +29,9 @@ class EditConetestSeriaizer(serializers.Serializer):
     password = serializers.CharField(allow_blank=True, allow_null=True, max_length=32)
     visible = serializers.BooleanField()
     real_time_rank = serializers.BooleanField()
-    allowed_ip_ranges = serializers.ListField(child=serializers.CharField(max_length=32))
+    allowed_ip_ranges = serializers.ListField(
+        child=serializers.CharField(max_length=32)
+    )
 
 
 class ContestAdminSerializer(serializers.ModelSerializer):
@@ -35,13 +41,13 @@ class ContestAdminSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Contest
-        fields = "__all__"
+        fields = '__all__'
 
 
 class ContestSerializer(ContestAdminSerializer):
     class Meta:
         model = Contest
-        exclude = ("password", "visible", "allowed_ip_ranges")
+        exclude = ('password', 'visible', 'allowed_ip_ranges')
 
 
 class ContestAnnouncementSerializer(serializers.ModelSerializer):
@@ -49,7 +55,7 @@ class ContestAnnouncementSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ContestAnnouncement
-        fields = "__all__"
+        fields = '__all__'
 
 
 class CreateContestAnnouncementSerializer(serializers.Serializer):
@@ -76,10 +82,10 @@ class ACMContestRankSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ACMContestRank
-        fields = "__all__"
+        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        self.is_contest_admin = kwargs.pop("is_contest_admin", False)
+        self.is_contest_admin = kwargs.pop('is_contest_admin', False)
         super().__init__(*args, **kwargs)
 
     def get_user(self, obj):
@@ -91,10 +97,10 @@ class OIContestRankSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OIContestRank
-        fields = "__all__"
+        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        self.is_contest_admin = kwargs.pop("is_contest_admin", False)
+        self.is_contest_admin = kwargs.pop('is_contest_admin', False)
         super().__init__(*args, **kwargs)
 
     def get_user(self, obj):

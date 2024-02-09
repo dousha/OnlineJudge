@@ -6,7 +6,6 @@ import problem.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('problem', '0012_auto_20180501_0436'),
     ]
@@ -15,6 +14,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='problem',
             name='io_mode',
-            field=django.contrib.postgres.fields.jsonb.JSONField(default=problem.models._default_io_mode),
+            field=django.contrib.postgres.fields.jsonb.JSONField(
+                default=problem.models._default_io_mode
+            ),
         ),
     ]

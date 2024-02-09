@@ -6,17 +6,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
             name='JudgeServer',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('hostname', models.CharField(max_length=64)),
                 ('ip', models.CharField(blank=True, max_length=32, null=True)),
                 ('judger_version', models.CharField(max_length=24)),
@@ -26,7 +32,10 @@ class Migration(migrations.Migration):
                 ('last_heartbeat', models.DateTimeField()),
                 ('create_time', models.DateTimeField(auto_now_add=True)),
                 ('task_number', models.IntegerField(default=0)),
-                ('service_url', models.CharField(blank=True, max_length=128, null=True)),
+                (
+                    'service_url',
+                    models.CharField(blank=True, max_length=128, null=True),
+                ),
             ],
             options={
                 'db_table': 'judge_server',
@@ -35,7 +44,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='JudgeServerToken',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('token', models.CharField(max_length=32)),
             ],
             options={
@@ -45,7 +62,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SMTPConfig',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('server', models.CharField(max_length=128)),
                 ('port', models.IntegerField(default=25)),
                 ('email', models.CharField(max_length=128)),
@@ -59,8 +84,19 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='WebsiteConfig',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('base_url', models.CharField(default='http://127.0.0.1', max_length=128)),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'base_url',
+                    models.CharField(default='http://127.0.0.1', max_length=128),
+                ),
                 ('name', models.CharField(default='Online Judge', max_length=32)),
                 ('name_shortcut', models.CharField(default='oj', max_length=32)),
                 ('footer', models.TextField(default='Online Judge Footer')),

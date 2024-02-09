@@ -11,18 +11,18 @@ DATABASES = {
         'PORT': get_env('POSTGRES_PORT', '5435'),
         'NAME': get_env('POSTGRES_DB', 'onlinejudge'),
         'USER': get_env('POSTGRES_USER', 'onlinejudge'),
-        'PASSWORD': get_env('POSTGRES_PASSWORD', 'onlinejudge')
+        'PASSWORD': get_env('POSTGRES_PASSWORD', 'onlinejudge'),
     }
 }
 
 REDIS_CONF = {
     'host': get_env('REDIS_HOST', '127.0.0.1'),
-    'port': get_env('REDIS_PORT', '6380')
+    'port': get_env('REDIS_PORT', '6380'),
 }
 
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['*']
 
-DATA_DIR = f"{BASE_DIR}/data"
+DATA_DIR = f'{BASE_DIR}/data'

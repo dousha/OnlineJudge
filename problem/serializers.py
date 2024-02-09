@@ -5,7 +5,11 @@ from django import forms
 from options.options import SysOptions
 from utils.api import UsernameSerializer, serializers
 from utils.constants import Difficulty
-from utils.serializers import LanguageNameMultiChoiceField, SPJLanguageNameChoiceField, LanguageNameChoiceField
+from utils.serializers import (
+    LanguageNameMultiChoiceField,
+    SPJLanguageNameChoiceField,
+    LanguageNameChoiceField,
+)
 
 from .models import Problem, ProblemRuleType, ProblemTag, ProblemIOMode
 from .utils import parse_problem_template
@@ -37,11 +41,11 @@ class ProblemIOModeSerializer(serializers.Serializer):
     output = serializers.CharField()
 
     def validate(self, attrs):
-        if attrs["input"] == attrs["output"]:
-            raise serializers.ValidationError("Invalid io mode")
-        for item in (attrs["input"], attrs["output"]):
-            if not re.match("^[a-zA-Z0-9.]+$", item):
-                raise serializers.ValidationError("Invalid io file name format")
+        if attrs['input'] == attrs['output']:
+            raise serializers.ValidationError('Invalid io mode')
+        for item in (attrs['input'], attrs['output']):
+            if not re.match('^[a-zA-Z0-9.]+$', item):
+                raise serializers.ValidationError('Invalid io file name format')
         return attrs
 
 
@@ -53,12 +57,16 @@ class CreateOrEditProblemSerializer(serializers.Serializer):
     output_description = serializers.CharField()
     samples = serializers.ListField(child=CreateSampleSerializer(), allow_empty=False)
     test_case_id = serializers.CharField(max_length=32)
-    test_case_score = serializers.ListField(child=CreateTestCaseScoreSerializer(), allow_empty=True)
+    test_case_score = serializers.ListField(
+        child=CreateTestCaseScoreSerializer(), allow_empty=True
+    )
     time_limit = serializers.IntegerField(min_value=1, max_value=1000 * 60)
     memory_limit = serializers.IntegerField(min_value=1, max_value=1024)
     languages = LanguageNameMultiChoiceField()
     template = serializers.DictField(child=serializers.CharField(min_length=1))
-    rule_type = serializers.ChoiceField(choices=[ProblemRuleType.ACM, ProblemRuleType.OI])
+    rule_type = serializers.ChoiceField(
+        choices=[ProblemRuleType.ACM, ProblemRuleType.OI]
+    )
     io_mode = ProblemIOModeSerializer()
     spj = serializers.BooleanField()
     spj_language = SPJLanguageNameChoiceField(allow_blank=True, allow_null=True)
@@ -66,7 +74,9 @@ class CreateOrEditProblemSerializer(serializers.Serializer):
     spj_compile_ok = serializers.BooleanField(default=False)
     visible = serializers.BooleanField()
     difficulty = serializers.ChoiceField(choices=Difficulty.choices())
-    tags = serializers.ListField(child=serializers.CharField(max_length=32), allow_empty=False)
+    tags = serializers.ListField(
+        child=serializers.CharField(max_length=32), allow_empty=False
+    )
     hint = serializers.CharField(allow_blank=True, allow_null=True)
     source = serializers.CharField(max_length=256, allow_blank=True, allow_null=True)
     share_submission = serializers.BooleanField()
@@ -92,7 +102,7 @@ class EditContestProblemSerializer(CreateOrEditProblemSerializer):
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProblemTag
-        fields = "__all__"
+        fields = '__all__'
 
 
 class CompileSPJSerializer(serializers.Serializer):
@@ -101,39 +111,56 @@ class CompileSPJSerializer(serializers.Serializer):
 
 
 class BaseProblemSerializer(serializers.ModelSerializer):
-    tags = serializers.SlugRelatedField(many=True, slug_field="name", read_only=True)
+    tags = serializers.SlugRelatedField(many=True, slug_field='name', read_only=True)
     created_by = UsernameSerializer()
 
     def get_public_template(self, obj):
         ret = {}
         for lang, code in obj.template.items():
-            ret[lang] = parse_problem_template(code)["template"]
+            ret[lang] = parse_problem_template(code)['template']
         return ret
 
 
 class ProblemAdminSerializer(BaseProblemSerializer):
     class Meta:
         model = Problem
-        fields = "__all__"
+        fields = '__all__'
 
 
 class ProblemSerializer(BaseProblemSerializer):
-    template = serializers.SerializerMethodField("get_public_template")
+    template = serializers.SerializerMethodField('get_public_template')
 
     class Meta:
         model = Problem
-        exclude = ("test_case_score", "test_case_id", "visible", "is_public",
-                   "spj_code", "spj_version", "spj_compile_ok")
+        exclude = (
+            'test_case_score',
+            'test_case_id',
+            'visible',
+            'is_public',
+            'spj_code',
+            'spj_version',
+            'spj_compile_ok',
+        )
 
 
 class ProblemSafeSerializer(BaseProblemSerializer):
-    template = serializers.SerializerMethodField("get_public_template")
+    template = serializers.SerializerMethodField('get_public_template')
 
     class Meta:
         model = Problem
-        exclude = ("test_case_score", "test_case_id", "visible", "is_public",
-                   "spj_code", "spj_version", "spj_compile_ok",
-                   "difficulty", "submission_number", "accepted_number", "statistic_info")
+        exclude = (
+            'test_case_score',
+            'test_case_id',
+            'visible',
+            'is_public',
+            'spj_code',
+            'spj_version',
+            'spj_compile_ok',
+            'difficulty',
+            'submission_number',
+            'accepted_number',
+            'statistic_info',
+        )
 
 
 class ContestProblemMakePublicSerializer(serializers.Serializer):
@@ -151,13 +178,13 @@ class ExportProblemSerializer(serializers.ModelSerializer):
     spj = serializers.SerializerMethodField()
     template = serializers.SerializerMethodField()
     source = serializers.SerializerMethodField()
-    tags = serializers.SlugRelatedField(many=True, slug_field="name", read_only=True)
+    tags = serializers.SlugRelatedField(many=True, slug_field='name', read_only=True)
 
     def get_display_id(self, obj):
         return obj._id
 
     def _html_format_value(self, value):
-        return {"format": "html", "value": value}
+        return {'format': 'html', 'value': value}
 
     def get_description(self, obj):
         return self._html_format_value(obj.description)
@@ -172,13 +199,17 @@ class ExportProblemSerializer(serializers.ModelSerializer):
         return self._html_format_value(obj.hint)
 
     def get_test_case_score(self, obj):
-        return [{"score": item["score"] if obj.rule_type == ProblemRuleType.OI else 100,
-                 "input_name": item["input_name"], "output_name": item["output_name"]}
-                for item in obj.test_case_score]
+        return [
+            {
+                'score': item['score'] if obj.rule_type == ProblemRuleType.OI else 100,
+                'input_name': item['input_name'],
+                'output_name': item['output_name'],
+            }
+            for item in obj.test_case_score
+        ]
 
     def get_spj(self, obj):
-        return {"code": obj.spj_code,
-                "language": obj.spj_language} if obj.spj else None
+        return {'code': obj.spj_code, 'language': obj.spj_language} if obj.spj else None
 
     def get_template(self, obj):
         ret = {}
@@ -187,14 +218,28 @@ class ExportProblemSerializer(serializers.ModelSerializer):
         return ret
 
     def get_source(self, obj):
-        return obj.source or f"{SysOptions.website_name} {SysOptions.website_base_url}"
+        return obj.source or f'{SysOptions.website_name} {SysOptions.website_base_url}'
 
     class Meta:
         model = Problem
-        fields = ("display_id", "title", "description", "tags",
-                  "input_description", "output_description",
-                  "test_case_score", "hint", "time_limit", "memory_limit", "samples",
-                  "template", "spj", "rule_type", "source", "template")
+        fields = (
+            'display_id',
+            'title',
+            'description',
+            'tags',
+            'input_description',
+            'output_description',
+            'test_case_score',
+            'hint',
+            'time_limit',
+            'memory_limit',
+            'samples',
+            'template',
+            'spj',
+            'rule_type',
+            'source',
+            'template',
+        )
 
 
 class AddContestProblemSerializer(serializers.Serializer):
@@ -204,7 +249,9 @@ class AddContestProblemSerializer(serializers.Serializer):
 
 
 class ExportProblemRequestSerialzier(serializers.Serializer):
-    problem_id = serializers.ListField(child=serializers.IntegerField(), allow_empty=False)
+    problem_id = serializers.ListField(
+        child=serializers.IntegerField(), allow_empty=False
+    )
 
 
 class UploadProblemForm(forms.Form):
@@ -212,7 +259,7 @@ class UploadProblemForm(forms.Form):
 
 
 class FormatValueSerializer(serializers.Serializer):
-    format = serializers.ChoiceField(choices=["html", "markdown"])
+    format = serializers.ChoiceField(choices=['html', 'markdown'])
     value = serializers.CharField(allow_blank=True)
 
 
@@ -245,7 +292,9 @@ class ImportProblemSerializer(serializers.Serializer):
     input_description = FormatValueSerializer()
     output_description = FormatValueSerializer()
     hint = FormatValueSerializer()
-    test_case_score = serializers.ListField(child=TestCaseScoreSerializer(), allow_null=True)
+    test_case_score = serializers.ListField(
+        child=TestCaseScoreSerializer(), allow_null=True
+    )
     time_limit = serializers.IntegerField(min_value=1, max_value=60000)
     memory_limit = serializers.IntegerField(min_value=1, max_value=10240)
     samples = serializers.ListField(child=CreateSampleSerializer())
@@ -259,7 +308,7 @@ class ImportProblemSerializer(serializers.Serializer):
 
 class FPSProblemSerializer(serializers.Serializer):
     class UnitSerializer(serializers.Serializer):
-        unit = serializers.ChoiceField(choices=["MB", "s", "ms"])
+        unit = serializers.ChoiceField(choices=['MB', 's', 'ms'])
         value = serializers.IntegerField(min_value=1, max_value=60000)
 
     title = serializers.CharField(max_length=128)
@@ -272,6 +321,12 @@ class FPSProblemSerializer(serializers.Serializer):
     samples = serializers.ListField(child=CreateSampleSerializer())
     source = serializers.CharField(max_length=200, allow_blank=True, allow_null=True)
     spj = SPJSerializer(allow_null=True)
-    template = serializers.ListField(child=serializers.DictField(), allow_empty=True, allow_null=True)
-    append = serializers.ListField(child=serializers.DictField(), allow_empty=True, allow_null=True)
-    prepend = serializers.ListField(child=serializers.DictField(), allow_empty=True, allow_null=True)
+    template = serializers.ListField(
+        child=serializers.DictField(), allow_empty=True, allow_null=True
+    )
+    append = serializers.ListField(
+        child=serializers.DictField(), allow_empty=True, allow_null=True
+    )
+    prepend = serializers.ListField(
+        child=serializers.DictField(), allow_empty=True, allow_null=True
+    )

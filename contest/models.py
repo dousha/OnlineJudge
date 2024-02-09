@@ -45,14 +45,17 @@ class Contest(models.Model):
 
     # 是否有权查看problem 的一些统计信息 诸如submission_number, accepted_number 等
     def problem_details_permission(self, user):
-        return self.rule_type == ContestRuleType.ACM or \
-               self.status == ContestStatus.CONTEST_ENDED or \
-               user.is_authenticated and user.is_contest_admin(self) or \
-               self.real_time_rank
+        return (
+            self.rule_type == ContestRuleType.ACM
+            or self.status == ContestStatus.CONTEST_ENDED
+            or user.is_authenticated
+            and user.is_contest_admin(self)
+            or self.real_time_rank
+        )
 
     class Meta:
-        db_table = "contest"
-        ordering = ("-start_time",)
+        db_table = 'contest'
+        ordering = ('-start_time',)
 
 
 class AbstractContestRank(models.Model):
@@ -73,8 +76,8 @@ class ACMContestRank(AbstractContestRank):
     submission_info = JSONField(default=dict)
 
     class Meta:
-        db_table = "acm_contest_rank"
-        unique_together = (("user", "contest"),)
+        db_table = 'acm_contest_rank'
+        unique_together = (('user', 'contest'),)
 
 
 class OIContestRank(AbstractContestRank):
@@ -84,8 +87,8 @@ class OIContestRank(AbstractContestRank):
     submission_info = JSONField(default=dict)
 
     class Meta:
-        db_table = "oi_contest_rank"
-        unique_together = (("user", "contest"),)
+        db_table = 'oi_contest_rank'
+        unique_together = (('user', 'contest'),)
 
 
 class ContestAnnouncement(models.Model):
@@ -97,5 +100,5 @@ class ContestAnnouncement(models.Model):
     create_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = "contest_announcement"
-        ordering = ("-create_time",)
+        db_table = 'contest_announcement'
+        ordering = ('-create_time',)

@@ -7,7 +7,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('contest', '0005_auto_20170823_0918'),
         ('problem', '0006_auto_20170823_0918'),
@@ -43,7 +42,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='problem',
             name='contest',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='contest.Contest'),
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to='contest.Contest',
+            ),
             preserve_default=False,
         ),
         migrations.AddField(

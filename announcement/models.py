@@ -14,5 +14,5 @@ class Announcement(models.Model):
     visible = models.BooleanField(default=True)
 
     class Meta:
-        db_table = "announcement"
-        ordering = ("-create_time",)
+        db_table = 'announcement'
+        ordering = ('-create_time',)

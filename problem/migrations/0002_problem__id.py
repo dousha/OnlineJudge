@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('problem', '0001_initial'),
     ]
@@ -15,7 +14,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='problem',
             name='_id',
-            field=models.CharField(db_index=True, default='1', max_length=24, unique=True),
+            field=models.CharField(
+                db_index=True, default='1', max_length=24, unique=True
+            ),
             preserve_default=False,
         ),
     ]

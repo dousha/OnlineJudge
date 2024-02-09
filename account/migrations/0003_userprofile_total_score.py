@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('account', '0002_auto_20170209_1028'),
     ]
@@ -25,5 +24,5 @@ class Migration(migrations.Migration):
         migrations.RemoveField(
             model_name='userprofile',
             name='time_zone',
-        )
+        ),
     ]

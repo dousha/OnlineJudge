@@ -17,32 +17,31 @@ class ShareSubmissionSerializer(serializers.Serializer):
 
 
 class SubmissionModelSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Submission
-        fields = "__all__"
+        fields = '__all__'
 
 
 # 不显示submission info的serializer, 用于ACM rule_type
 class SubmissionSafeModelSerializer(serializers.ModelSerializer):
-    problem = serializers.SlugRelatedField(read_only=True, slug_field="_id")
+    problem = serializers.SlugRelatedField(read_only=True, slug_field='_id')
 
     class Meta:
         model = Submission
-        exclude = ("info", "contest", "ip")
+        exclude = ('info', 'contest', 'ip')
 
 
 class SubmissionListSerializer(serializers.ModelSerializer):
-    problem = serializers.SlugRelatedField(read_only=True, slug_field="_id")
+    problem = serializers.SlugRelatedField(read_only=True, slug_field='_id')
     show_link = serializers.SerializerMethodField()
 
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop("user", None)
+        self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
 
     class Meta:
         model = Submission
-        exclude = ("info", "contest", "code", "ip")
+        exclude = ('info', 'contest', 'code', 'ip')
 
     def get_show_link(self, obj):
         # 没传user或为匿名user

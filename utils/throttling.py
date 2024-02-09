@@ -5,6 +5,7 @@ class TokenBucket:
     """
     注意：对于单个key的操作不是线程安全的
     """
+
     def __init__(self, key, capacity, fill_rate, default_capacity, redis_conn):
         """
         :param capacity: 最大容量
@@ -18,8 +19,8 @@ class TokenBucket:
         self._default_capacity = default_capacity
         self._redis_conn = redis_conn
 
-        self._last_capacity_key = "last_capacity"
-        self._last_timestamp_key = "last_timestamp"
+        self._last_capacity_key = 'last_capacity'
+        self._last_timestamp_key = 'last_timestamp'
 
     def _init_key(self):
         self._last_capacity = self._default_capacity

@@ -17,6 +17,7 @@ class my_property:
     2. ttl is callable，条件缓存
     3. 缓存 ttl 秒
     """
+
     def __init__(self, func=None, fset=None, ttl=None):
         self.fset = fset
         self.local = threading.local()
@@ -32,9 +33,9 @@ class my_property:
 
     def _check_timeout(self, value):
         if not isinstance(value, int):
-            raise ValueError(f"Invalid timeout type: {type(value)}")
+            raise ValueError(f'Invalid timeout type: {type(value)}')
         if value < 0:
-            raise ValueError("Invalid timeout value, it must >= 0")
+            raise ValueError('Invalid timeout value, it must >= 0')
 
     def __get__(self, obj, cls):
         if obj is None:
@@ -42,7 +43,7 @@ class my_property:
 
         now = time.time()
         if self.ttl:
-            if hasattr(self.local, "value"):
+            if hasattr(self.local, 'value'):
                 value, expire_at = self.local.value
                 if now < expire_at:
                     return value
@@ -70,14 +71,14 @@ class my_property:
         if not self.fset:
             raise AttributeError("can't set attribute")
         self.fset(obj, value)
-        if hasattr(self.local, "value"):
+        if hasattr(self.local, 'value'):
             del self.local.value
 
     def setter(self, func):
         self.fset = func
         return self
 
-    def __call__(self, func, *args, **kwargs) -> "my_property":
+    def __call__(self, func, *args, **kwargs) -> 'my_property':
         if self.func is None:
             self.func = func
             functools.update_wrapper(self, func)
@@ -88,41 +89,43 @@ DEFAULT_SHORT_TTL = 2
 
 
 def default_token():
-    token = os.environ.get("JUDGE_SERVER_TOKEN")
+    token = os.environ.get('JUDGE_SERVER_TOKEN')
     return token if token else rand_str()
 
 
 class OptionKeys:
-    website_base_url = "website_base_url"
-    website_name = "website_name"
-    website_name_shortcut = "website_name_shortcut"
-    website_footer = "website_footer"
-    allow_register = "allow_register"
-    submission_list_show_all = "submission_list_show_all"
-    smtp_config = "smtp_config"
-    judge_server_token = "judge_server_token"
-    throttling = "throttling"
-    languages = "languages"
+    website_base_url = 'website_base_url'
+    website_name = 'website_name'
+    website_name_shortcut = 'website_name_shortcut'
+    website_footer = 'website_footer'
+    allow_register = 'allow_register'
+    submission_list_show_all = 'submission_list_show_all'
+    smtp_config = 'smtp_config'
+    judge_server_token = 'judge_server_token'
+    throttling = 'throttling'
+    languages = 'languages'
 
 
 class OptionDefaultValue:
-    website_base_url = "http://127.0.0.1"
-    website_name = "Online Judge"
-    website_name_shortcut = "oj"
-    website_footer = "Online Judge Footer"
+    website_base_url = 'http://127.0.0.1'
+    website_name = 'Online Judge'
+    website_name_shortcut = 'oj'
+    website_footer = 'Online Judge Footer'
     allow_register = True
     submission_list_show_all = True
     smtp_config = {}
     judge_server_token = default_token
-    throttling = {"ip": {"capacity": 100, "fill_rate": 0.1, "default_capacity": 50},
-                  "user": {"capacity": 20, "fill_rate": 0.03, "default_capacity": 10}}
+    throttling = {
+        'ip': {'capacity': 100, 'fill_rate': 0.1, 'default_capacity': 50},
+        'user': {'capacity': 20, 'fill_rate': 0.03, 'default_capacity': 10},
+    }
     languages = languages
 
 
 class _SysOptionsMeta(type):
     @classmethod
     def _get_keys(cls):
-        return [key for key in OptionKeys.__dict__ if not key.startswith("__")]
+        return [key for key in OptionKeys.__dict__ if not key.startswith('__')]
 
     @classmethod
     def _init_option(mcs):
@@ -263,15 +266,15 @@ class _SysOptionsMeta(type):
 
     @my_property(ttl=DEFAULT_SHORT_TTL)
     def spj_languages(cls):
-        return [item for item in cls.languages if "spj" in item]
+        return [item for item in cls.languages if 'spj' in item]
 
     @my_property(ttl=DEFAULT_SHORT_TTL)
     def language_names(cls):
-        return [item["name"] for item in cls.languages]
+        return [item['name'] for item in cls.languages]
 
     @my_property(ttl=DEFAULT_SHORT_TTL)
     def spj_language_names(cls):
-        return [item["name"] for item in cls.languages if "spj" in item]
+        return [item['name'] for item in cls.languages if 'spj' in item]
 
     def reset_languages(cls):
         cls.languages = languages

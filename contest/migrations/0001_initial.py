@@ -10,7 +10,6 @@ import utils.models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -22,7 +21,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ACMContestRank',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('total_submission_number', models.IntegerField(default=0)),
                 ('total_ac_number', models.IntegerField(default=0)),
                 ('total_time', models.IntegerField(default=0)),
@@ -35,7 +42,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Contest',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('title', models.CharField(max_length=40)),
                 ('description', utils.models.RichTextField()),
                 ('real_time_rank', models.BooleanField()),
@@ -46,7 +61,13 @@ class Migration(migrations.Migration):
                 ('create_time', models.DateTimeField(auto_now_add=True)),
                 ('last_update_time', models.DateTimeField(auto_now=True)),
                 ('visible', models.BooleanField(default=True)),
-                ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    'created_by',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
                 'db_table': 'contest',
@@ -55,12 +76,32 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ContestAnnouncement',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('title', models.CharField(max_length=128)),
                 ('content', utils.models.RichTextField()),
                 ('create_time', models.DateTimeField(auto_now_add=True)),
-                ('contest', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contest.Contest')),
-                ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    'contest',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='contest.Contest',
+                    ),
+                ),
+                (
+                    'created_by',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
                 'db_table': 'contest_announcement',
@@ -69,7 +110,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ContestProblem',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('title', models.CharField(max_length=128)),
                 ('description', utils.models.RichTextField()),
                 ('input_description', utils.models.RichTextField()),
@@ -85,7 +134,10 @@ class Migration(migrations.Migration):
                 ('time_limit', models.IntegerField()),
                 ('memory_limit', models.IntegerField()),
                 ('spj', models.BooleanField(default=False)),
-                ('spj_language', models.CharField(blank=True, max_length=32, null=True)),
+                (
+                    'spj_language',
+                    models.CharField(blank=True, max_length=32, null=True),
+                ),
                 ('spj_code', models.TextField(blank=True, null=True)),
                 ('spj_version', models.CharField(blank=True, max_length=32, null=True)),
                 ('rule_type', models.CharField(max_length=32)),
@@ -96,8 +148,20 @@ class Migration(migrations.Migration):
                 ('total_accepted_number', models.IntegerField(default=0)),
                 ('sort_index', models.CharField(max_length=30)),
                 ('is_public', models.BooleanField(default=False)),
-                ('contest', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contest.Contest')),
-                ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    'contest',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='contest.Contest',
+                    ),
+                ),
+                (
+                    'created_by',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
                 ('tags', models.ManyToManyField(to='problem.ProblemTag')),
             ],
             options={
@@ -107,12 +171,32 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='OIContestRank',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('total_submission_number', models.IntegerField(default=0)),
                 ('total_score', models.IntegerField(default=0)),
                 ('submission_info', jsonfield.fields.JSONField(default={})),
-                ('contest', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contest.Contest')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    'contest',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='contest.Contest',
+                    ),
+                ),
+                (
+                    'user',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
                 'db_table': 'oi_contest_rank',
@@ -121,11 +205,15 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='acmcontestrank',
             name='contest',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contest.Contest'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to='contest.Contest'
+            ),
         ),
         migrations.AddField(
             model_name='acmcontestrank',
             name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]

@@ -9,17 +9,24 @@ import utils.shortcuts
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
             name='Submission',
             fields=[
-                ('id', models.CharField(db_index=True, default=utils.shortcuts.rand_str, max_length=32, primary_key=True, serialize=False)),
+                (
+                    'id',
+                    models.CharField(
+                        db_index=True,
+                        default=utils.shortcuts.rand_str,
+                        max_length=32,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
                 ('contest_id', models.IntegerField(db_index=True, null=True)),
                 ('problem_id', models.IntegerField(db_index=True)),
                 ('created_time', models.DateTimeField(auto_now_add=True)),

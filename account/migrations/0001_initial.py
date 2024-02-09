@@ -11,19 +11,30 @@ import account.models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
             name='User',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
+                (
+                    'last_login',
+                    models.DateTimeField(
+                        blank=True, null=True, verbose_name='last login'
+                    ),
+                ),
                 ('username', models.CharField(max_length=30, unique=True)),
                 ('real_name', models.CharField(max_length=30, null=True)),
                 ('email', models.EmailField(max_length=254, null=True)),
@@ -48,20 +59,37 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UserProfile',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('problems_status', jsonfield.fields.JSONField(default={})),
-                ('avatar', models.CharField(default="default.png", max_length=50)),
+                ('avatar', models.CharField(default='default.png', max_length=50)),
                 ('blog', models.URLField(blank=True, null=True)),
                 ('mood', models.CharField(blank=True, max_length=200, null=True)),
                 ('accepted_problem_number', models.IntegerField(default=0)),
                 ('submission_number', models.IntegerField(default=0)),
-                ('phone_number', models.CharField(blank=True, max_length=15, null=True)),
+                (
+                    'phone_number',
+                    models.CharField(blank=True, max_length=15, null=True),
+                ),
                 ('school', models.CharField(blank=True, max_length=200, null=True)),
                 ('major', models.CharField(blank=True, max_length=200, null=True)),
                 ('student_id', models.CharField(blank=True, max_length=15, null=True)),
                 ('time_zone', models.CharField(blank=True, max_length=32, null=True)),
                 ('language', models.CharField(blank=True, max_length=32, null=True)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    'user',
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
                 'db_table': 'user_profile',

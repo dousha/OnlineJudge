@@ -5,7 +5,7 @@ from options.options import SysOptions
 
 class InvalidLanguage(serializers.ValidationError):
     def __init__(self, name):
-        super().__init__(detail=f"{name} is not a valid language")
+        super().__init__(detail=f'{name} is not a valid language')
 
 
 class LanguageNameChoiceField(serializers.CharField):
