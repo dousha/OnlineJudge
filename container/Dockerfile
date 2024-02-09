@@ -1,5 +1,6 @@
 FROM python:3.12-alpine
-
+ARG TARGETARCH
+ARG TARGETVARIANT
 ENV OJ_ENV production
 WORKDIR /app
 
