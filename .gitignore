@@ -60,4 +60,4 @@ tmp/
 custom_settings.py
 *.zip
 
-venv/
+.venv/
