@@ -4,7 +4,7 @@ set -ex
 APP=/app
 DATA=/data
 
-mkdir -p $DATA/log $DATA/config $DATA/test_case $DATA/public/upload $DATA/public/avatar $DATA/public/website
+mkdir -p $DATA/config $DATA/test_case $DATA/public/upload $DATA/public/avatar $DATA/public/website
 
 if [ ! -f "$DATA/config/secret.key" ]; then
     echo $(cat /dev/urandom | head -1 | md5sum | head -c 32) > "$DATA/config/secret.key"
@@ -37,4 +37,6 @@ else
     export WORKER_NUM="$CPU_CORE_NUM";
 fi
 
-gunicorn oj.wsgi --user server --group spj --bind 0.0.0.0:8080 --workers $WORKER_NUM
+gunicorn oj.wsgi --user server --group spj \
+    --bind 0.0.0.0:8080 --workers $WORKER_NUM \
+    --error-logfile - --access-logfile - --log-level debug
