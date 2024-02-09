@@ -60,4 +60,6 @@ tmp/
 custom_settings.py
 *.zip
 
+data/
 .venv/
+.ruff_cache/
