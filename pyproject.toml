@@ -1,10 +1,12 @@
 [tool.poetry]
 name = "oj"
 version = "1.7.0"
-description = "Open source online judge based on Vue, Django and Docker"
+description = "Open source online judge system based on Python and Vue."
 authors = ["virusdefender <virusdefender@outlook.com>"]
-license = "License :: OSI Approved :: MIT License"
+maintainers = ["Mikucat <admin@mikucat.me>"]
+license = "MIT"
 readme = "README.md"
+repository = "https://github.com/QingdaoU/OnlineJudge"
 
 [tool.poetry.dependencies]
 python = "^3.8"
