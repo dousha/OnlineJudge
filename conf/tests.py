@@ -88,7 +88,7 @@ class JudgeServerHeartbeatTest(APITestCase):
         self.token = "test"
         self.hashed_token = hashlib.sha256(self.token.encode("utf-8")).hexdigest()
         SysOptions.judge_server_token = self.token
-        self.headers = {"HTTP_X_JUDGE_SERVER_TOKEN": self.hashed_token, settings.IP_HEADER: "1.2.3.4"}
+        self.headers = {"HTTP_X_JUDGE_SERVER_TOKEN": self.hashed_token, 'X-Forwarded-For': "1.2.3.4"}
 
     def test_new_heartbeat(self):
         resp = self.client.post(self.url, data=self.data, **self.headers)
