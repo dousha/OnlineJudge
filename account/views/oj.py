@@ -1,5 +1,6 @@
 import os
 from datetime import timedelta
+from datetime import datetime
 from importlib import import_module
 
 import qrcode
@@ -60,7 +61,8 @@ class UserProfileAPI(APIView):
         except User.DoesNotExist:
             return self.error('User does not exist')
         return self.success(
-            UserProfileSerializer(user.userprofile, show_real_name=show_real_name).data
+            UserProfileSerializer(
+                user.userprofile, show_real_name=show_real_name).data
         )
 
     @validate_serializer(EditUserProfileSerializer)
@@ -178,7 +180,8 @@ class UserLoginAPI(APIView):
         User login api
         """
         data = request.data
-        user = auth.authenticate(username=data['username'], password=data['password'])
+        user = auth.authenticate(
+            username=data['username'], password=data['password'])
         # None is returned if username or password is wrong
         if user:
             if user.is_disabled:
@@ -220,7 +223,8 @@ class UsernameOrEmailCheck(APIView):
                 username=data['username'].lower()
             ).exists()
         if data.get('email'):
-            result['email'] = User.objects.filter(email=data['email'].lower()).exists()
+            result['email'] = User.objects.filter(
+                email=data['email'].lower()).exists()
         return self.success(result)
 
 
@@ -243,7 +247,8 @@ class UserRegisterAPI(APIView):
             return self.error('Username already exists')
         if User.objects.filter(email=data['email']).exists():
             return self.error('Email already exists')
-        user = User.objects.create(username=data['username'], email=data['email'])
+        user = User.objects.create(
+            username=data['username'], email=data['email'])
         user.set_password(data['password'])
         user.save()
         UserProfile.objects.create(user=user)
@@ -283,7 +288,8 @@ class UserChangePasswordAPI(APIView):
         """
         data = request.data
         username = request.user.username
-        user = auth.authenticate(username=username, password=data['old_password'])
+        user = auth.authenticate(
+            username=username, password=data['old_password'])
         if user:
             if user.two_factor_auth:
                 if 'tfa_code' not in data:
@@ -402,17 +408,40 @@ class SessionManagementAPI(APIView):
 class UserRankAPI(APIView):
     def get(self, request):
         rule_type = request.GET.get('rule')
+        since = request.GET.get("since")
+        to = request.GET.get("to")
+
         if rule_type not in ContestRuleType.choices():
             rule_type = ContestRuleType.ACM
+
+        if since:
+            if not since.isnumeric():
+                return self.error("since must be a number")
+
+        if to:
+            if not to.isnumeric():
+                return self.error("to must be a number")
+
         profiles = UserProfile.objects.filter(
             user__admin_type=AdminType.REGULAR_USER, user__is_disabled=False
         ).select_related('user')
+
         if rule_type == ContestRuleType.ACM:
             profiles = profiles.filter(submission_number__gt=0).order_by(
                 '-accepted_number', 'submission_number'
             )
         else:
-            profiles = profiles.filter(total_score__gt=0).order_by('-total_score')
+            profiles = profiles.filter(
+                total_score__gt=0).order_by('-total_score')
+
+        if since:
+            profiles = profiles.filter(
+                user__create_time__gte=datetime.fromtimestamp(int(since)))
+
+        if to:
+            profiles = profiles.filter(
+                user__create_time__lte=datetime.fromtimestamp(int(to)))
+
         return self.success(self.paginate_data(request, profiles, RankInfoSerializer))
 
 
@@ -433,7 +462,8 @@ class ProfileProblemDisplayIDRefreshAPI(APIView):
             v['_id'] = id_map[k]
         for k, v in oi_problems.items():
             v['_id'] = id_map[k]
-        profile.save(update_fields=['acm_problems_status', 'oi_problems_status'])
+        profile.save(update_fields=[
+                     'acm_problems_status', 'oi_problems_status'])
         return self.success()
 
 
